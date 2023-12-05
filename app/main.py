@@ -16,8 +16,12 @@ classifier = SentimentClassifier(model_path=directory_path, tokenizer_path=direc
 
 # Función para registrar en CSV
 def log_to_csv(endpoint, text, response):
+    file_exists = os.path.isfile('reports.csv')  # Comprueba si el archivo ya existe
     with open('reports.csv', mode='a', newline='', encoding='utf-8') as file:
         writer = csv.writer(file)
+        if not file_exists:
+            # Si el archivo no existe, escribe los encabezados
+            writer.writerow(['Timestamp', 'Endpoint', 'Input Text', 'Response'])
         now = datetime.datetime.now()
         writer.writerow([now, endpoint, text, response])
 
@@ -79,7 +83,7 @@ async def analyze_text(text: str):
 
 @app.get("/reports")
 def get_reports():
-    file_path = 'reports.csv'  # Asegúrate de que este sea el camino correcto al archivo CSV
+    file_path = 'reports.csv'
     return FileResponse(file_path, media_type='text/csv', filename='reports.csv')
 
 if __name__ == "__main__":
