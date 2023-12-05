@@ -5,6 +5,7 @@ import psutil
 import csv
 import datetime
 from fastapi import FastAPI
+from fastapi.responses import FileResponse
 from predictor import SentimentClassifier
 
 app = FastAPI()
@@ -78,8 +79,8 @@ async def analyze_text(text: str):
 
 @app.get("/reports")
 def get_reports():
-    # Aquí puedes implementar la lógica para descargar el archivo CSV
-    pass
+    file_path = 'reports.csv'  # Asegúrate de que este sea el camino correcto al archivo CSV
+    return FileResponse(file_path, media_type='text/csv', filename='reports.csv')
 
 if __name__ == "__main__":
     import uvicorn
